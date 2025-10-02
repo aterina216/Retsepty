@@ -9,27 +9,15 @@ import com.example.retsepty.data.models.Meal
 import com.example.retsepty.data.repo.MealRepository
 import kotlinx.coroutines.launch
 
-class MealViewModel: ViewModel() {
+class MealViewModel(private val repo: MealRepository): ViewModel() {
 
-    private val repository = MealRepository()
 
-    private val _meals = MutableLiveData<List<Meal>>()
-    val meals: LiveData<List<Meal>> = _meals
+    val meals: LiveData<List<Meal>> = repo.getMealsAndRefresh()
 
-    init{
-        loadMeals()
-    }
-
-    fun loadMeals(){
+    fun refreshData(){
         viewModelScope.launch {
-
-            try {
-                val mealList = repository.getMeals()
-                _meals.value =mealList
-            }
-            catch (e: Exception){
-                print(e.message)
-            }
+            repo.loadAndSaveMeals()
         }
     }
+
 }

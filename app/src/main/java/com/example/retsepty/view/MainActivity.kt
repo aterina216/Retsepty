@@ -8,24 +8,38 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.retsepty.App
 import com.example.retsepty.R
+import com.example.retsepty.data.dagger.AppComponent
+import com.example.retsepty.data.db.AppDataBase
+import com.example.retsepty.data.network.RetrofitInstance
+import com.example.retsepty.data.repo.MealRepository
 import com.example.retsepty.databinding.ActivityMainBinding
 import com.example.retsepty.view.adapters.MealAdapter
 import com.example.retsepty.view.viewmodels.MealViewModel
 import com.example.retsepty.view.viewmodels.ViewModelFactory
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MealViewModel
     private lateinit var adapter: MealAdapter
 
+    private val repository: MealRepository by lazy {
+        MealRepository(
+            AppDataBase.getDataBase(this).mealDao(),
+            RetrofitInstance.api
+        )
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val repository = (application as App).repo
 
         adapter = MealAdapter()
 

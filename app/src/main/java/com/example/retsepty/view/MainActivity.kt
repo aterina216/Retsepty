@@ -23,16 +23,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MealViewModel
     private lateinit var adapter: MealAdapter
 
-    private val repository: MealRepository by lazy {
-        MealRepository(
-            AppDataBase.getDataBase(this).mealDao(),
-            RetrofitInstance.api
-        )
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        (application as App).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -48,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(repository)
+            viewModelFactory
         )[MealViewModel::class.java]
 
 

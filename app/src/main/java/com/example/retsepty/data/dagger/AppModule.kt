@@ -7,6 +7,7 @@ import com.example.retsepty.data.db.MealDao
 import com.example.retsepty.data.network.MealApi
 import com.example.retsepty.data.network.RetrofitInstance
 import com.example.retsepty.data.repo.MealRepository
+import com.example.retsepty.view.viewmodels.ViewModelFactory
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -34,5 +35,10 @@ class AppModule {
     @Provides
     fun provideRepo(mealDao: MealDao, mealApi: MealApi): MealRepository{
         return MealRepository(mealDao, mealApi)
+    }
+
+    @Provides
+    fun provideViewModelFactory(repository: MealRepository): ViewModelFactory {
+        return ViewModelFactory(repository)
     }
 }

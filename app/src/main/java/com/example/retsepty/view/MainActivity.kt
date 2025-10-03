@@ -10,10 +10,12 @@ import com.example.retsepty.App
 import com.example.retsepty.R
 import com.example.retsepty.data.dagger.AppComponent
 import com.example.retsepty.data.db.AppDataBase
+import com.example.retsepty.data.models.Meal
 import com.example.retsepty.data.network.RetrofitInstance
 import com.example.retsepty.data.repo.MealRepository
 import com.example.retsepty.databinding.ActivityMainBinding
 import com.example.retsepty.view.adapters.MealAdapter
+import com.example.retsepty.view.fragments.MealDetailFragment
 import com.example.retsepty.view.viewmodels.MealViewModel
 import com.example.retsepty.view.viewmodels.ViewModelFactory
 import javax.inject.Inject
@@ -38,7 +40,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        adapter = MealAdapter()
+        adapter = MealAdapter{
+            meal -> openMealDetail(meal)
+        }
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -52,5 +56,17 @@ class MainActivity : AppCompatActivity() {
         viewModel.meals.observe(this){
             meals -> adapter.updateMeals(meals)
         }
+
+    }
+
+    private fun openMealDetail(meal: Meal){
+
+        val fragment = MealDetailFragment.newInstance(meal)
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

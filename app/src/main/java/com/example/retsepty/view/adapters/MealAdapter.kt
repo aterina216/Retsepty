@@ -10,7 +10,10 @@ import com.example.retsepty.R
 import com.example.retsepty.data.models.Meal
 import com.example.retsepty.databinding.ItemMealBinding
 
-class MealAdapter(private var meals: List<Meal> = emptyList()) :
+class MealAdapter(
+    private var meals: List<Meal> = emptyList(),
+    private val onMealClick: (Meal) -> Unit
+) :
     RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
 
@@ -21,6 +24,7 @@ class MealAdapter(private var meals: List<Meal> = emptyList()) :
         val binding = ItemMealBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MealViewHolder(binding)
     }
+
 
     override fun onBindViewHolder(
         holder: MealViewHolder,
@@ -41,6 +45,7 @@ class MealAdapter(private var meals: List<Meal> = emptyList()) :
     inner class MealViewHolder(private val binding: ItemMealBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+
         fun bind(meal: Meal) {
             binding.tvMealName.text = meal.strMeal
             binding.tvCategory.text = "Категория + ${meal.strCategory}"
@@ -50,6 +55,11 @@ class MealAdapter(private var meals: List<Meal> = emptyList()) :
                 .load(meal.strMealThumb)
                 .placeholder(R.drawable.image_placeholder)
                 .into(binding.ivMeal)
+
+            binding.root.setOnClickListener {
+                onMealClick.invoke(meal)
+            }
         }
+
     }
 }

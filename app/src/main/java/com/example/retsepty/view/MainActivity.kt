@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MealViewModel
     private lateinit var adapter: MealAdapter
 
+    private lateinit var binding: ActivityMainBinding
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
@@ -39,11 +41,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "Вкусные рецепты"
+
+        setupBottomNavigation()
 
         adapter = MealAdapter{
             meal -> openMealDetail(meal)
@@ -76,9 +80,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        println("✅ onCreateOptionsMenu вызван")
+
         menuInflater.inflate(R.menu.main_menu, menu)
-        println("✅ Меню создано, количество пунктов: ${menu.size()}")
         return true
     }
 
@@ -96,5 +99,20 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupBottomNavigation(){
+        binding.bottomNavigation.setOnNavigationItemSelectedListener{
+            item ->
+            when(item.itemId){
+                R.id.nav_home -> {
+                    true
+                }
+                R.id.nav_favorites -> {
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }

@@ -1,6 +1,9 @@
 package com.example.retsepty.view
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -39,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = "Вкусные рецепты"
 
         adapter = MealAdapter{
             meal -> openMealDetail(meal)
@@ -68,5 +73,28 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        println("✅ onCreateOptionsMenu вызван")
+        menuInflater.inflate(R.menu.main_menu, menu)
+        println("✅ Меню создано, количество пунктов: ${menu.size()}")
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search -> {
+                // Реализуй поиск
+                Toast.makeText(this, "Поиск", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            R.id.action_favorites -> {
+                // Реализуй избранное
+                Toast.makeText(this, "Избранное", Toast.LENGTH_SHORT).show()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

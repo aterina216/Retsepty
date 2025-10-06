@@ -61,4 +61,5 @@ dependencies {
     kapt ("androidx.room:room-compiler:2.8.0" )
     implementation("com.google.dagger:dagger:2.46")
     kapt("com.google.dagger:dagger-compiler:2.46")
+    implementation("com.google.android.material:material:1.11.0")
 }

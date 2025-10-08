@@ -3,6 +3,7 @@ package com.example.retsepty.view
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -40,6 +41,16 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            if (supportFragmentManager.backStackEntryCount == 0) {
+                // Если стек пуст (все фрагменты закрыты), показываем CardView
+                binding.cardView.visibility = View.VISIBLE
+            } else {
+                // Если есть фрагменты в стеке, убеждаемся, что CardView скрыт
+                binding.cardView.visibility = View.GONE
+            }
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

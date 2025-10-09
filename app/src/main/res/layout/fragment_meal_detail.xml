@@ -19,23 +19,46 @@
             app:cardElevation="8dp"
             android:layout_marginBottom="16dp">
 
-            <ImageView
-                android:id="@+id/ivMealDetail"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/image_placeholder" />
+                android:layout_height="wrap_content">
 
-            <!-- Градиент поверх изображения -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_gravity="bottom"
-                android:background="@drawable/bottom_gradient" />
+                <ImageView
+                    android:id="@+id/ivMealDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/image_placeholder" />
+
+                <!-- Градиент поверх изображения -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/bottom_gradient" />
+
+                <!-- Кнопка сохранения в нижнем правом углу -->
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="13dp"
+                    android:layout_marginBottom="42dp"
+                    android:contentDescription="Сохранить изображение"
+                    android:src="@android:drawable/stat_sys_download"
+                    app:backgroundTint="#FF6B6B"
+                    app:tint="@android:color/white" />
+
+            </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Информация о рецепте -->
+        <!-- Остальная разметка без изменений -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

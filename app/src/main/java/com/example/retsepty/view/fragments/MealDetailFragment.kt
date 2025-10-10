@@ -8,10 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.collection.buildIntSet
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.bumptech.glide.Glide
 import com.example.retsepty.R
 import com.example.retsepty.data.models.Meal
 import com.example.retsepty.databinding.FragmentMealDetailBinding
+import com.example.retsepty.service.ImageDownloadWorker
 import com.example.retsepty.util.ImageDownloader
 import com.example.retsepty.util.PermissionManager
 
@@ -50,7 +54,7 @@ class MealDetailFragment : Fragment() {
         println("🟢 image_url: ${arguments?.getString("image_url")}")
         println("🟢 meal_name: ${arguments?.getString("meal_name")}")
 
-        imageDownloader = ImageDownloader(requireContext())
+
 
         val meal = arguments?.getParcelable<Meal>(ARGS)
         if(meal!=null){
@@ -78,17 +82,20 @@ class MealDetailFragment : Fragment() {
         binding.tvInstructions.text = meal.strInstructions
     }
 
-    private fun downloadImage(){
-        val meal = arguments?.getParcelable<Meal>(ARGS) ?: return.also {
-            println("❌ Meal не найден в аргументах")
-            Toast.makeText(requireContext(), "Ошибка: данные не найдены", Toast.LENGTH_SHORT).show()
-            return
-        }
-
+    private fun downloadImage() {
+        val meal = arguments?.getParcelable<Meal>("meal") ?: return
         val imageUrl = meal.strMealThumb
         val mealName = meal.strMeal ?: "Рецепт"
 
-        imageDownloader.downloadImage(imageUrl, mealName, this)
+        val request = OneTimeWorkRequestBuilder<ImageDownloadWorker>()
+            .setInputData(workDataOf(
+                "image_url" to imageUrl,
+                "meal_name" to mealName
+            ))
+            .build()
+
+        WorkManager.getInstance(requireContext()).enqueue(request)
+        Toast.makeText(requireContext(), "Скачивание началось", Toast.LENGTH_SHORT).show()
     }
 
     companion object {

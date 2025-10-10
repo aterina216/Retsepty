@@ -3,19 +3,23 @@ package com.example.retsepty.util
 import androidx.fragment.app.Fragment
 import android.content.Context
 import android.widget.Toast
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.example.retsepty.service.DownloadImageWorker
 
 class ImageDownloader(private val context: Context) {
 
     private val permissionManager = PermissionManager(context)
-    private val downloadStarter = DownloadStarter(context)
 
     fun downloadImage(imageUrl: String, mealName: String, fragment: Fragment){
 
-        println("🟢 ImageDownloader.start()")
+        println("🟢 ImageDownloader: запуск через WorkManager")
 
         if(permissionManager.hasStoragePermission()){
             println("🟢 Разрешения есть, запускаем скачивание")
-            startDownload(imageUrl, mealName)
+            startDownloadWithWorkManager(imageUrl, mealName)
         }
         else{
             println("🟡 Запрашиваем разрешения")
@@ -27,7 +31,7 @@ class ImageDownloader(private val context: Context) {
         permissionManager.requestStoragePermission(fragment){
             granted ->
             if(granted){
-                startDownload(imageUrl, mealName)
+                startDownloadWithWorkManager(imageUrl, mealName)
             }
             else{
                 showPermissionDeniedMessage()
@@ -35,9 +39,19 @@ class ImageDownloader(private val context: Context) {
         }
     }
 
-    private fun startDownload(imageUrl: String, mealName: String){
-        downloadStarter.startImageDownload(imageUrl, mealName)
+    private fun startDownloadWithWorkManager(imageUrl: String, mealName: String){
+        val inputData = workDataOf(DownloadImageWorker.KEY_IMAGE_URL to imageUrl,
+            DownloadImageWorker.KEY_MEAL_NAME to mealName)
+
+        val downloadWorkRequest = OneTimeWorkRequestBuilder<DownloadImageWorker>()
+            .setInputData(inputData)
+            .addTag("image_download")
+            .build()
+
+        WorkManager.getInstance(context).enqueue(downloadWorkRequest)
+
         showDownloadStartedMessage()
+        println("🟢 WorkManager запущен для: $mealName")
     }
 
     private fun showDownloadStartedMessage(){

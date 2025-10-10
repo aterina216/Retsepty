@@ -62,4 +62,5 @@ dependencies {
     implementation("com.google.dagger:dagger:2.46")
     kapt("com.google.dagger:dagger-compiler:2.46")
     implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 }

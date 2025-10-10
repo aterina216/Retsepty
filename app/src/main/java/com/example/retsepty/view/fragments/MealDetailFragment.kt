@@ -88,12 +88,6 @@ class MealDetailFragment : Fragment() {
         val imageUrl = meal.strMealThumb
         val mealName = meal.strMeal ?: "Рецепт"
 
-        if(imageUrl.isNullOrEmpty()){
-            println("❌ URL изображения пустой")
-            Toast.makeText(requireContext(), "Ошибка: URL изображения не найден", Toast.LENGTH_SHORT).show()
-            return
-        }
-        println("🟡 Запускаем скачивание: $mealName, $imageUrl")
         imageDownloader.downloadImage(imageUrl, mealName, this)
     }
 
